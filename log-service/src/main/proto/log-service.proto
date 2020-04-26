@@ -1,0 +1,15 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+package pl.chacz.log;
+
+option java_multiple_files = true;
+
+service Log {
+    rpc NewPlanet (Planet) returns (google.protobuf.Empty);
+    rpc PlanetDestroy (Planet) returns (google.protobuf.Empty);
+}
+
+message Planet {
+    string id = 1;
+}
