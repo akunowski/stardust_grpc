@@ -7,7 +7,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.async
 import pl.chacz.deathstar.DeathStarGrpcKt
-import pl.chacz.deathstar.DestroyReply
 import pl.chacz.deathstar.DestroyRequest
 import pl.chacz.galaxy.GalaxyGrpcKt
 

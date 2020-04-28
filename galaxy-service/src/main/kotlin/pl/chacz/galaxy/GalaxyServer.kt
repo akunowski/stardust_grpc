@@ -3,12 +3,14 @@ package pl.chacz.galaxy
 import com.google.protobuf.Empty
 import io.grpc.Server
 import io.grpc.ServerBuilder
-import java.util.*
 
-class GalaxyServer(private val port: Int) {
+class GalaxyServer(
+    private val port: Int,
+    planetService: PlanetService) {
+
     val server: Server = ServerBuilder
         .forPort(port)
-        .addService(GalaxyService())
+        .addService(GalaxyService(planetService))
         .build()
 
     fun start() {
@@ -30,20 +32,24 @@ class GalaxyServer(private val port: Int) {
         server.awaitTermination()
     }
 
-    private class GalaxyService : GalaxyGrpcKt.GalaxyCoroutineImplBase() {
+    private class GalaxyService(
+        private val planetService: PlanetService) : GalaxyGrpcKt.GalaxyCoroutineImplBase() {
+
         override suspend fun findPlanet(request: Empty): Planet {
-            //TODO: add logic
-            return Planet
-                .newBuilder()
-                .setId(UUID.randomUUID().toString())
-                .build()
+            val planet = planetService.createPlanet()
+            println("Found planet: ${planet.id}")
+            return planet
         }
 
         override suspend fun deletePlanet(request: DeletePlanetRequest): Status {
-            //TODO: add logic
+
+            val removedPlaned = planetService.removePlanet(request.id)
+            val status = if (removedPlaned == null) "failed" else "success"
+            println("Removed planet: ${removedPlaned!!.id}")
+
             return Status
                 .newBuilder()
-                .setStatus("planet removed form galaxy map")
+                .setStatus(status)
                 .build()
         }
     }
@@ -51,7 +57,7 @@ class GalaxyServer(private val port: Int) {
 
 fun main() {
     val port = 8802
-    val server = GalaxyServer(port)
+    val server = GalaxyServer(port, PlanetService())
     server.start()
     server.blockUntilShutdown()
 }
