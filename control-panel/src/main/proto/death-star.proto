@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pl.chacz.deathstar;
+
+option java_multiple_files = true;
+
+service DeathStar {
+    rpc Destroy (DestroyRequest) returns (DestroyReply);
+}
+
+message DestroyRequest {
+    string name = 1;
+}
+
+message DestroyReply {
+    string status = 1;
+}

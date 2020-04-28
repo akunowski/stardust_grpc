@@ -1,0 +1,23 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+package pl.chacz.galaxy;
+
+option java_multiple_files = true;
+
+service Galaxy {
+    rpc FindPlanet (google.protobuf.Empty) returns (Planet);
+    rpc DeletePlanet (DeletePlanetRequest) returns (Status);
+}
+
+message Planet {
+    string id = 1;
+}
+
+message DeletePlanetRequest {
+    string id = 1;
+}
+
+message Status {
+    string status = 1;
+}
