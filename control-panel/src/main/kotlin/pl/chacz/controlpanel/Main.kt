@@ -26,13 +26,12 @@ suspend fun main()  {
             .executor(Dispatchers.Default.asExecutor())
             .build())
 
+    repeat(5) {
+        val planet = GlobalScope.async { galaxyClient.findPlanet(Empty.getDefaultInstance()) }
+        val destroyRequest = DestroyRequest.newBuilder().setId(planet.await().id).build()
 
-    val planet = GlobalScope.async { galaxyClient.findPlanet(Empty.getDefaultInstance()) }
-    val destroyRequest = DestroyRequest.newBuilder().setName(planet.await().id).build()
-
-    val removedStatus = GlobalScope.async {
         deathStarClient.destroy(destroyRequest)
     }
 
-    println(removedStatus.await().status)
+
 }
